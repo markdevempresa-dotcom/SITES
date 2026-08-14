@@ -1,0 +1,206 @@
+/* ===========================================================================
+   VÉRTICE ODONTOLOGIA — TOKENS  (v2.0 — direção "clínica clara")
+
+   MUDANÇA DESTA VERSÃO, e o porquê:
+   1. A paleta virou do avesso. Saiu "ouro sobre carvão", entrou a paleta de
+      referência do cliente: creme, menta, água e um verde-ardósia escuro.
+      O site deixou de ser uma peça noturna e passou a ser uma peça clara —
+      que é o que o setor odontológico lê como limpeza.
+   2. As SEIS cores da referência entraram como estão:
+        #2F3E3C  ardósia   #BDDBD1  menta    #E7E9E3  pedra
+        #FBF9F1  creme     #E8F0F1  bruma    #C7E7EC  água
+   3. Foi derivado UM meio-tom, e ele é o único valor que não veio da
+      referência: --teal #24645B. Razão: a paleta traz uma cor escura e cinco
+      quase-brancas. Link, botão primário e ícone precisam de uma cor que não
+      seja a mesma do texto corrido e que passe 4,5:1 sobre TODAS as
+      superfícies. Nenhuma das seis faz isso. O tom foi escurecido sobre a
+      própria matiz da menta, para pertencer à família.
+   4. --teal-lite #4E9A8C existe só para uso NÃO textual (fios, ícones
+      decorativos): 3,15:1 sobre o creme, acima do piso de 3:1 do WCAG 1.4.11,
+      abaixo do piso de 4,5:1 para texto. Nunca use em texto.
+
+   Contrastes: medidos no navegador sobre a superfície REAL de cada token, não
+   calculados no papel. Ver RELATORIO-CONFORMIDADE.md.
+   =========================================================================== */
+
+:root {
+  /* --- as seis cores da referência ---------------------------------------- */
+  --ardosia: #2F3E3C;
+  --menta:   #BDDBD1;
+  --pedra:   #E7E9E3;
+  --creme:   #FBF9F1;
+  --bruma:   #E8F0F1;
+  --agua:    #C7E7EC;
+
+  /* --- o meio-tom derivado (ver nota 3 acima) ----------------------------- */
+  --teal:      #24645B;   /* texto, link, preenchimento de botão              */
+  --teal-lite: #4E9A8C;   /* SÓ decorativo: fios e ícones. Nunca texto.       */
+
+  /* --- escala de superfície: do mais puro ao mais tingido -----------------
+     Os nomes --ink-* vêm da v1 escura, quando iam do mais escuro ao mais
+     claro. Aqui a ordem se inverte: --ink-900 é o mais puro (base de placas
+     opacas) e --ink-500 o mais tingido — que é a PIOR superfície para
+     contraste, o papel que o --ink-500 escuro fazia antes.               */
+  --ink-900: #FFFFFF;   /* placa opaca, legenda sobre foto, superfície "deep" */
+  --ink-800: var(--creme);
+  --ink-700: #F2F4EF;   /* superfície alternada e campos                      */
+  --ink-600: #FFFFFF;   /* cartão                                             */
+  --ink-500: var(--pedra); /* inset — PIOR superfície                         */
+
+  /* --- texto (a pior razão de cada um está no relatório) ------------------ */
+  --text-hi:  var(--ardosia);
+  --text-mid: #465753;
+  --text-low: #56645F;
+
+  /* --- acento ------------------------------------------------------------- */
+  --gold:      var(--teal);        /* nome antigo, valor novo — ver aliases   */
+  --champagne: var(--ardosia);     /* display e números                       */
+  --gold-dim:  var(--teal-lite);
+
+  /* --- estados ------------------------------------------------------------ */
+  --ok:     #1E7A52;
+  --danger: #A33227;
+
+  /* --- fios e bordas ------------------------------------------------------ */
+  --rule-base: #DCE2DD;  /* filete decorativo, sem exigência de contraste     */
+  --ctl-base:  #6B7E78;  /* borda de campo/botão — piso 3:1 do WCAG 1.4.11    */
+
+  /* --- ALIASES DE COMPATIBILIDADE -----------------------------------------
+     base.css e sections.css foram escritos contra os nomes da v1.0. Em vez de
+     reescrever dois arquivos grandes, os nomes antigos apontam para os valores
+     novos. Quem editar deve usar os nomes de cima; estes existem só para não
+     quebrar o CSS já escrito.                                                */
+  --text-strong: var(--text-hi);
+  --text-body:   var(--text-mid);
+  --text-muted:  var(--text-low);
+  --accent:      var(--teal);
+  --accent-deep: var(--ardosia);
+  --brass:       var(--ardosia);
+  --brass-deep:  var(--teal);
+  --line-dark:     var(--rule-base);
+  --line-lite:     var(--rule-base);
+  --line-ctl-dark: var(--ctl-base);
+  --line-ctl-lite: var(--ctl-base);
+  --bone-100: var(--ink-700);
+  --bone-200: var(--ink-600);
+  --bone-300: var(--ink-500);
+  --text-ink:   var(--text-hi);
+  --text-ink-2: var(--text-mid);
+  --text-ink-3: var(--text-low);
+  --danger-deep: var(--danger);
+  --shadow-lift-lite: var(--shadow-lift);
+
+  /* --- espaçamento -------------------------------------------------------- */
+  --s-1: .25rem;  --s-2: .5rem;   --s-3: .75rem;  --s-4: 1rem;
+  --s-5: 1.5rem;  --s-6: 2rem;    --s-7: 3rem;    --s-8: 4rem;
+
+  /* Recuo interno das caixas. É token e não valor solto porque muda com a
+     largura: num celular de 390px, 48px de recuo somados aos 32px de margem da
+     página deixavam o texto com 230px — quase toda frase quebrava em três
+     linhas. Abaixo de 62rem as duas escalas colapsam em 24px. */
+  --pad-caixa: var(--s-7);    /* painéis grandes: deny, stepper, contato */
+  --pad-cartao: var(--s-6);   /* cartões menores */
+  --pad-figura: var(--s-5);   /* legendas e etiquetas sobre foto */
+  --s-9: 6rem;    --s-10: 8rem;   --s-11: 11rem;  --s-12: 14rem;
+
+  /* --- tipografia --------------------------------------------------------- */
+  --font-display: "Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-text: "Sora", "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+
+  --fs-display: clamp(2.35rem, .95rem + 5.1vw, 5.15rem);
+  --fs-h2:      clamp(1.95rem, 1.1rem + 3.4vw, 3.5rem);
+  --fs-h3:      clamp(1.2rem, 1.02rem + .8vw, 1.6rem);
+  --fs-lead:    clamp(1.08rem, .98rem + .55vw, 1.35rem);
+  --fs-body:    clamp(1rem, .97rem + .16vw, 1.075rem);
+  --fs-sm:      .875rem;
+  --fs-xs:      .75rem;
+
+  --lh-display: 1.02;
+  --lh-title: 1.1;
+  --lh-body: 1.62;
+  --measure: 68ch;
+
+  /* --- geometria: uma postura --------------------------------------------- */
+  --r: 3px;
+
+  /* --- movimento: 1 easing, 4 durações ------------------------------------ */
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --t-1: 160ms;
+  --t-2: 420ms;
+  --t-3: 900ms;
+  --t-4: 24s;
+
+  /* --- sombra ------------------------------------------------------------
+     Na peça escura as sombras eram pretas e pesadas — funcionavam porque
+     caíam sobre preto. Sobre creme, preto puro vira sujeira. Aqui a sombra é
+     a própria ardósia com alfa baixo, e virou token porque estava cravada em
+     seis lugares diferentes.                                              */
+  --sombra-1: 0 1px 2px rgb(47 62 60 / .05), 0 6px 16px -10px rgb(47 62 60 / .18);
+  --sombra-2: 0 2px 4px rgb(47 62 60 / .05), 0 14px 34px -18px rgb(47 62 60 / .26);
+  --sombra-3: 0 4px 8px rgb(47 62 60 / .06), 0 28px 60px -30px rgb(47 62 60 / .32);
+  --shadow-lift: 0 -1px 0 0 color-mix(in oklab, var(--teal-lite) 55%, transparent);
+
+  /* --- tratamento das fotos ----------------------------------------------
+     Era quente (sépia) para casar com o ouro. Agora é limpo e levemente frio,
+     para casar com menta e água. Token porque aparece em cinco regras.    */
+  --grade-foto:       saturate(.82) contrast(1.02) brightness(1.03);
+  --grade-foto-hover: saturate(.95) contrast(1.02) brightness(1.06);
+
+  /* --- papel: a folha que espia de dentro das pastas do §2 ----------------
+     Era creme sobre carvão. Numa peça clara, creme sobre branco não existe:
+     a folha passou a ser a menta.                                          */
+  --paper: var(--menta);
+  --paper-2: #A6CDC1;
+
+  /* --- layout ------------------------------------------------------------- */
+  --wrap: 78rem;
+  --wrap-narrow: 54rem;
+  /* folga mínima entre a borda da página e o conteúdo, para o texto nunca
+     encostar na barra lateral fixa (que ocupa 32px–64px da viewport).
+     Ver `.wrap` em base.css: o recuo é simétrico e só existe enquanto a margem
+     da página for menor que isto. */
+  --folga-barra: 6rem;
+}
+
+/* Em tela estreita as duas escalas de recuo colapsam. Medido em 390px com os
+   valores do desktop: as caixas de 48px deixavam 230px de texto e os cartões de
+   32px deixavam 262px — somados aos 32px de margem da página, o texto começava a
+   80px da borda. Aqui as duas viram 24px e o texto ganha 48px de volta. */
+@media (max-width: 61.99rem) {
+  :root {
+    --pad-caixa: var(--s-5);
+    --pad-cartao: var(--s-5);
+    --pad-figura: var(--s-4);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   SUPERFÍCIES — todas claras. O ritmo vem da fotografia e da temperatura:
+   creme (quente) alterna com bruma e pedra (frias), e a menta só aparece na
+   faixa de foto, onde não carrega texto corrido.
+   deep    : bruma — capa e fecho
+   dark    : creme — padrão
+   raised  : pedra — um degrau, sem escurecer
+   photo   : menta — seção com imagem full-bleed
+   --------------------------------------------------------------------------- */
+
+[data-surface] {
+  --bg: var(--creme);
+  --bg-card: #FFFFFF;
+  --bg-inset: var(--pedra);
+  --bg-raised: #F2F4EF;
+  --fg-strong: var(--text-hi);
+  --fg: var(--text-mid);
+  --fg-muted: var(--text-low);
+  --tint: var(--teal);
+  --tint-2: var(--ardosia);
+  --rule: var(--rule-base);
+  --rule-ctl: var(--ctl-base);
+  --lift: var(--shadow-lift);
+  --err: var(--danger);
+  color-scheme: light;
+}
+
+[data-surface="deep"]   { --bg: var(--bruma); --bg-inset: #DCE7E9; --rule: #D3DFE1; }
+[data-surface="raised"] { --bg: var(--pedra); --bg-raised: #F2F4EF; --bg-inset: #DADDD5; --rule: #D2D7CF; }
+[data-surface="photo"]  { --bg: var(--menta); --rule: #A6CDC1; }

@@ -1,0 +1,134 @@
+/* ===========================================================================
+   CLÍNICA AROEIRA — v2 · TOKENS
+   "MANUAL DO PACIENTE" — a peça é um objeto impresso, não uma landing page.
+   Estrutura: capa · sumário · capítulos com coluna fixa e notas de margem ·
+   citações destacadas · colofão. Corpo de texto em SERIFA.
+
+   A v1 (Vértice, especialista) fica em ../site/ e não compartilha nada com esta.
+   Contrastes calculados (WCAG 2.1) em DESIGN-SYSTEM-V2.md.
+   =========================================================================== */
+
+:root {
+  /* --- papel ------------------------------------------------------------- */
+  --paper-0: #F2EDE1;   /* creme                                             */
+  --paper-1: #E8E1D1;   /* creme sombreado                                   */
+  --paper-2: #DBD2BE;   /* PIOR superfície clara                             */
+
+  /* --- tinta -------------------------------------------------------------- */
+  --ink:   #16130F;     /* preto quente                                      */
+  --ink-2: #3A342B;     /*  8,19:1 sobre --paper-2  AAA                      */
+  --ink-3: #544B3E;     /*  5,70:1 sobre --paper-2  AA                       */
+  --sand:  #A79C8A;     /*  6,85:1 sobre --ink      AA — apagado no escuro   */
+
+  /* --- vermelhão: UMA cor que serve nos dois sentidos ---------------------
+     #BC2D18 mede 5,10:1 como texto sobre creme E como bloco com texto creme.
+     Foi escolhido por medição: #D93A22 (mais vivo) dá 3,93:1 e reprova.      */
+  --red:     #BC2D18;
+  --red-ink: #FF6A4D;   /*  6,54:1 sobre --ink — o vermelho no bloco escuro  */
+
+  /* --- estados ------------------------------------------------------------ */
+  --ok:   #2F6B35;
+  --err:  #9A2410;
+  --ok-ink:  #7FD48A;
+  --err-ink: #FF8E75;
+
+  /* --- fios e bordas ------------------------------------------------------ */
+  --rule-lite: #C9BFA8;   /* fio decorativo no creme                         */
+  --rule-dark: #2E2820;   /* fio decorativo na tinta                         */
+  --ctl-lite:  #7E7464;   /* 3,93:1 — borda de controle no creme             */
+  --ctl-dark:  #766B5C;   /* 3,55:1 — borda de controle na tinta
+                             (#5E5548 dava 2,53 e REPROVOU)                  */
+
+  /* --- espaçamento -------------------------------------------------------- */
+  --s-1: .25rem;  --s-2: .5rem;   --s-3: .75rem;  --s-4: 1rem;
+  --s-5: 1.5rem;  --s-6: 2rem;    --s-7: 3rem;    --s-8: 4rem;
+  --s-9: 6rem;    --s-10: 8rem;   --s-11: 11rem;  --s-12: 15rem;
+
+  /* --- tipografia: display expandido + SERIFA no corpo -------------------- */
+  --font-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --font-text: "Newsreader", "Iowan Old Style", Georgia, serif;
+
+  --fs-cover: clamp(2.9rem, .4rem + 8.2vw, 8.75rem);
+  --fs-chapter: clamp(2rem, 1rem + 4vw, 4rem);
+  --fs-h3: clamp(1.3rem, 1.08rem + 1vw, 1.9rem);
+  --fs-lead: clamp(1.2rem, 1.02rem + .85vw, 1.65rem);
+  --fs-body: clamp(1.125rem, 1.03rem + .38vw, 1.3rem);   /* serifa pede corpo maior */
+  --fs-sm: 1rem;
+  --fs-xs: .8125rem;
+  --fs-micro: .6875rem;
+
+  --lh-body: 1.66;
+  --measure: 62ch;
+
+  /* --- geometria: IMPRESSO. Nada arredondado. -----------------------------
+     A v1 usa raio 3px; a versão anterior desta usava 14px. Aqui é 0:
+     um manual impresso não tem canto arredondado.                           */
+  --r: 0px;
+
+  /* --- movimento: 1 easing, 4 durações ------------------------------------
+     Curva sem ultrapassagem, de assentamento seco — gesto de tinta que
+     encosta no papel, não de elástico.                                      */
+  --ease: cubic-bezier(.16, .84, .28, 1);
+  --t-1: 120ms;
+  --t-2: 340ms;
+  --t-3: 760ms;
+  --t-4: 18s;
+
+  /* --- grade do manual ---------------------------------------------------- */
+  --wrap: 84rem;
+  --col-marker: 11rem;   /* coluna fixa do capítulo                          */
+  --col-margin: 13rem;   /* coluna das notas de margem                       */
+}
+
+/* ---------------------------------------------------------------------------
+   TRÊS SUPERFÍCIES: papel · tinta · vermelhão
+   O vermelhão chapado é o gesto de risografia e não existe na v1.
+   --------------------------------------------------------------------------- */
+
+[data-surface="paper"] {
+  --bg: var(--paper-0);
+  --bg-2: var(--paper-1);
+  --bg-3: var(--paper-2);
+  --fg-strong: var(--ink);
+  --fg: var(--ink-2);
+  --fg-muted: var(--ink-3);
+  --accent: var(--red);
+  --rule: var(--rule-lite);
+  --ctl: var(--ctl-lite);
+  --on-accent: var(--paper-0);
+  --state-ok: var(--ok);
+  --state-err: var(--err);
+  color-scheme: light;
+}
+
+[data-surface="ink"] {
+  --bg: var(--ink);
+  --bg-2: #1E1A15;
+  --bg-3: #262119;
+  --fg-strong: var(--paper-0);
+  --fg: var(--paper-1);
+  --fg-muted: var(--sand);
+  --accent: var(--red-ink);
+  --rule: var(--rule-dark);
+  --ctl: var(--ctl-dark);
+  --on-accent: var(--ink);
+  --state-ok: var(--ok-ink);
+  --state-err: var(--err-ink);
+  color-scheme: dark;
+}
+
+[data-surface="red"] {
+  --bg: var(--red);
+  --bg-2: #A82814;
+  --bg-3: #9A2410;
+  --fg-strong: var(--paper-0);
+  --fg: var(--paper-0);
+  --fg-muted: #F7E9E4;   /* 5,03:1 sobre o vermelhão (#F0D6CE dava 4,31 e REPROVOU) */
+  --accent: var(--paper-0);
+  --rule: #D9614E;
+  --ctl: #F0C4BA;
+  --on-accent: var(--red);
+  --state-ok: var(--paper-0);
+  --state-err: var(--paper-0);
+  color-scheme: dark;
+}

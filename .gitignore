@@ -1,0 +1,25 @@
+# Este projeto NÃO tem build: é HTML, CSS e um ES module. Não existe
+# node_modules nem passo de compilação — se aparecer um, algo saiu do trilho.
+node_modules/
+dist/
+.vercel/
+
+# sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# editores
+.vscode/
+.idea/
+*.swp
+
+# temporários do harness de verificação (ficam fora do projeto, mas por garantia)
+*.log
+_crop*.html
+img/_s_*.jpg
+img/_r_*.jpg
+img/_f*.jpg
+
+# estado interno do Claude Code — não faz parte da entrega
+.claude/

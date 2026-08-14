@@ -1,0 +1,139 @@
+/* ===========================================================================
+   AROEIRA v2 — MOVIMENTO
+   Orçamento (§9): 1 easing · 4 durações · 14 @keyframes · 0 listener de scroll
+   Anima só transform, opacity, clip-path, stroke-dashoffset.
+
+   O gesto é de IMPRESSÃO, não de interface: coisas assentam, fios correm da
+   esquerda, blocos entram por cortina. Nada pulsa, nada brilha, nada flutua —
+   o que separa esta peça da v1 (respiração e halo) e da versão anterior desta.
+
+   A revelação por rolagem roda em CSS puro com animation-timeline: view().
+   =========================================================================== */
+
+/* 1 */  @keyframes settle   { from { opacity: 0; transform: translate3d(0, 1.25rem, 0); } to { opacity: 1; transform: none; } }
+/* 2 */  @keyframes appear   { from { opacity: 0; } to { opacity: 1; } }
+/* 3 */  @keyframes curtain  { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 -2% 0); } }
+/* 4 */  @keyframes ruleRun  { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+/* 5 */  @keyframes inkDraw  { from { stroke-dashoffset: var(--dash, 1400); } to { stroke-dashoffset: 0; } }
+/* 6 */  @keyframes press    { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: none; } }
+/* 7 */  @keyframes slideIn  { from { opacity: 0; transform: translate3d(-1.5rem, 0, 0); } to { opacity: 1; transform: none; } }
+/* 8 */  @keyframes readBar  { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+/* 9 */  @keyframes tick     { from { opacity: 0; transform: scale(.4); } to { opacity: 1; transform: none; } }
+/* 10 */ @keyframes grainRun { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-2.5%, -2.5%, 0); } }
+/* 11 */ @keyframes nudge    { from { transform: translate3d(0, -.25rem, 0); } to { transform: translate3d(0, .25rem, 0); } }
+/* 12 */ @keyframes sending  { from { transform: translateX(-100%) scaleX(.4); } to { transform: translateX(300%) scaleX(.4); } }
+/* 13 */ @keyframes dropCap  { from { opacity: 0; transform: translate3d(0, .4rem, 0); } to { opacity: 1; transform: none; } }
+/* 14 */ @keyframes markerUp { from { opacity: 0; transform: translate3d(0, 2rem, 0); } to { opacity: 1; transform: none; } }
+
+/* ===========================================================================
+   CAMINHO A — revelação nativa em CSS, sem JavaScript
+   =========================================================================== */
+
+@supports (animation-timeline: view()) {
+  .rv {
+    animation-name: settle;
+    animation-timing-function: var(--ease);
+    animation-fill-mode: both;
+    animation-timeline: view();
+    animation-range: entry 4% cover 24%;
+  }
+  .rv--appear  { animation-name: appear; }
+  .rv--curtain { animation-name: curtain; }
+  .rv--press   { animation-name: press; }
+  .rv--slide   { animation-name: slideIn; }
+  .rv--marker  { animation-name: markerUp; }
+  .rv--rule    { animation-name: ruleRun; transform-origin: left; }
+  .rv--cap     { animation-name: dropCap; }
+
+  .draw-line {
+    stroke-dasharray: var(--dash, 1400);
+    animation-name: inkDraw;
+    animation-timing-function: var(--ease);
+    animation-fill-mode: both;
+    animation-timeline: view();
+    animation-range: entry 10% cover 42%;
+  }
+
+  /* barra de leitura do cabeçalho corrido — orientada pelo scroll do documento */
+  .runhead__progress {
+    animation: readBar linear both;
+    animation-timeline: scroll(root block);
+  }
+}
+
+/* ===========================================================================
+   CAMINHO B — IntersectionObserver, só onde view() não existe.
+   O JS marca <html class="no-vt">. Sem JS e sem view(), nada fica escondido.
+   =========================================================================== */
+
+.no-vt .rv { opacity: 0; }
+.no-vt .rv.is-in {
+  opacity: 1;
+  animation: settle var(--t-3) var(--ease) backwards;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+.no-vt .rv--appear.is-in  { animation-name: appear; }
+.no-vt .rv--curtain.is-in { animation-name: curtain; }
+.no-vt .rv--press.is-in   { animation-name: press; }
+.no-vt .rv--slide.is-in   { animation-name: slideIn; }
+.no-vt .rv--marker.is-in  { animation-name: markerUp; }
+.no-vt .rv--cap.is-in     { animation-name: dropCap; }
+.no-vt .rv--rule { transform-origin: left; }
+.no-vt .rv--rule.is-in { animation-name: ruleRun; }
+.no-vt .draw-line { stroke-dasharray: var(--dash, 1400); stroke-dashoffset: var(--dash, 1400); }
+.no-vt .is-in .draw-line, .no-vt .draw-line.is-in { animation: inkDraw var(--t-3) var(--ease) forwards; animation-delay: calc(var(--i, 0) * 100ms); }
+.no-vt .runhead__progress { transition: transform var(--t-2) var(--ease); }
+
+/* ===========================================================================
+   ENTRADA DA CAPA — sempre orquestrada por JS, para garantir a ordem
+   =========================================================================== */
+
+.js .cover__line { opacity: 0; }
+.js .cover.is-in .cover__line { opacity: 1; animation: curtain var(--t-3) var(--ease) backwards; }
+.js .cover.is-in .cover__line:nth-child(1) { animation-delay: 80ms; }
+.js .cover.is-in .cover__line:nth-child(2) { animation-delay: 200ms; }
+.js .cover.is-in .cover__line:nth-child(3) { animation-delay: 320ms; }
+.js .cover__after { opacity: 0; }
+.js .cover.is-in .cover__after { opacity: 1; animation: settle var(--t-3) var(--ease) backwards; animation-delay: calc(460ms + var(--i, 0) * 90ms); }
+
+/* ===========================================================================
+   AMBIENTE — só a granulação e o cutucão da seta. Nada mais se mexe sozinho.
+   =========================================================================== */
+
+.grain { animation: grainRun var(--t-4) var(--ease) infinite alternate; animation-delay: -4s; }
+.amb-nudge { animation: nudge var(--t-4) var(--ease) infinite alternate; animation-delay: -2s; }
+
+.year__m.is-on { animation: tick var(--t-2) var(--ease) backwards; animation-delay: calc(var(--i, 0) * 40ms); }
+
+.is-sending { position: relative; overflow: hidden; }
+.is-sending::after {
+  content: ""; position: absolute; left: 0; bottom: 0; height: 3px; width: 30%;
+  background: currentColor;
+  animation: sending var(--t-3) var(--ease) infinite alternate;
+}
+
+/* ===========================================================================
+   prefers-reduced-motion — desliga tudo
+   =========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 1ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* nada pode ficar preso invisível quando a animação é anulada */
+  .rv, .no-vt .rv, .js .cover__line, .js .cover__after { opacity: 1 !important; }
+  .rv, .no-vt .rv.is-in, .js .cover.is-in .cover__line, .js .cover.is-in .cover__after { animation: none !important; }
+  .draw-line, .no-vt .draw-line { stroke-dashoffset: 0 !important; animation: none !important; }
+  .rv--rule, .runhead__progress { transform: scaleX(1) !important; animation: none !important; }
+  .year__m.is-on { animation: none !important; }
+  .grain, .amb-nudge { animation: none !important; }
+  .is-sending::after { animation: none !important; width: 100%; }
+}

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <radialGradient id="glow" cx="78%" cy="18%" r="62%">
+      <stop offset="0%" stop-color="#24645B" stop-opacity=".30"/>
+      <stop offset="100%" stop-color="#24645B" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="8%" cy="96%" r="55%">
+      <stop offset="0%" stop-color="#24645B" stop-opacity=".16"/>
+      <stop offset="100%" stop-color="#24645B" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="#FBF9F1"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <rect width="1200" height="630" fill="url(#glow2)"/>
+
+  <g fill="none" stroke="#24645B" stroke-width="1" opacity=".22">
+    <path d="M-40 70 C 200 20, 380 120, 620 70 S 1000 18, 1240 70"/>
+    <path d="M-40 130 C 210 78, 390 182, 630 128 S 1006 76, 1240 130"/>
+    <path d="M-40 194 C 222 138, 402 248, 642 190 S 1014 138, 1240 194"/>
+    <path d="M-40 262 C 234 202, 414 318, 654 256 S 1022 204, 1240 262"/>
+  </g>
+  <g fill="none" stroke="#24645B" stroke-width="1" opacity=".16">
+    <path d="M-40 334 C 246 270, 426 392, 666 326 S 1030 274, 1240 334"/>
+    <path d="M-40 410 C 258 342, 438 470, 678 400 S 1038 348, 1240 410"/>
+    <path d="M-40 490 C 270 418, 450 552, 690 478 S 1046 426, 1240 490"/>
+    <path d="M-40 574 C 282 498, 462 638, 702 560 S 1054 508, 1240 574"/>
+  </g>
+
+  <g transform="translate(80 76)">
+    <path d="M0 0 L26 46 L52 0" fill="none" stroke="#24645B" stroke-width="3"/>
+    <path d="M13 0 L26 24 L39 0" fill="none" stroke="#24645B" stroke-width="3"/>
+    <circle cx="26" cy="46" r="3.4" fill="#24645B"/>
+  </g>
+  <text x="152" y="112" font-family="Georgia, 'Times New Roman', serif" font-size="34" fill="#2F3E3C" letter-spacing="1">Vértice</text>
+  <text x="152" y="136" font-family="Verdana, Geneva, sans-serif" font-size="12" fill="#4E9A8C" letter-spacing="5">ODONTOLOGIA</text>
+
+  <text x="80" y="300" font-family="Georgia, 'Times New Roman', serif" font-size="62" fill="#2F3E3C" letter-spacing="-1">Se você adia o dentista há anos,</text>
+  <text x="80" y="372" font-family="Georgia, 'Times New Roman', serif" font-size="62" fill="#2F3E3C" letter-spacing="-1">o obstáculo raramente</text>
+  <text x="80" y="444" font-family="Georgia, 'Times New Roman', serif" font-size="62" fill="#24645B" letter-spacing="-1">é o dente.</text>
+
+  <path d="M80 496 H1120" stroke="#2A3538" stroke-width="1"/>
+
+  <text x="80" y="534" font-family="Verdana, Geneva, sans-serif" font-size="16" fill="#BDDBD1">Dra. Helena Sampaio Tomé — Cirurgiã-Dentista — CRO-XX 00.000</text>
+  <text x="80" y="562" font-family="Verdana, Geneva, sans-serif" font-size="16" fill="#4E9A8C">Implantodontia · Prótese Dentária — Batel, Curitiba/PR</text>
+  <text x="80" y="596" font-family="Verdana, Geneva, sans-serif" font-size="12" fill="#56645F">Site-modelo demonstrativo — profissional, clínica e CRO fictícios</text>
+</svg>

@@ -1,0 +1,12 @@
+# Clínica Aroeira — PEÇA DEMONSTRATIVA
+# Profissional, clínica, endereço e CRO são fictícios, e o retrato é de uma
+# pessoa real sob nome inventado. Por isso a indexação está BLOQUEADA.
+#
+# Ao publicar com dados reais de um profissional real, troque este arquivo por:
+#   User-agent: *
+#   Allow: /
+#   Sitemap: https://SEU-DOMINIO/sitemap.xml
+# e o <meta name="robots"> do index.html. Ver COMO-MANTER.md §3b e §3c.
+
+User-agent: *
+Disallow: /

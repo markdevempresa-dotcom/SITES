@@ -1,0 +1,620 @@
+/* ===========================================================================
+   VÉRTICE — BASE: reset, tipografia, layout, componentes
+   Todo componente interativo entrega os 6 estados exigidos pelo §9:
+   repouso · hover · focus-visible · ativo · desabilitado · erro.
+   =========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--s-9);
+}
+
+body {
+  margin: 0;
+  background: var(--ink-900);
+  color: var(--text-body);
+  font-family: var(--font-text);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  font-weight: 350;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4 { margin: 0; font-weight: 400; }
+p { margin: 0; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+img, svg { display: block; max-width: 100%; }
+img { height: auto; }
+a { color: inherit; }
+button, input, textarea, select { font: inherit; color: inherit; }
+
+::selection { background: var(--accent); color: var(--ink-900); }
+
+/* --- pular para o conteúdo ------------------------------------------------ */
+.skip {
+  position: absolute; left: var(--s-4); top: var(--s-4);
+  transform: translateY(-200%);
+  z-index: 100;
+  background: var(--accent); color: var(--ink-900);
+  padding: var(--s-3) var(--s-5); border-radius: var(--r);
+  font-size: var(--fs-sm); font-weight: 600; text-decoration: none;
+  transition: transform var(--t-1) var(--ease);
+}
+.skip:focus-visible { transform: translateY(0); outline: 2px solid var(--ink-900); outline-offset: 2px; }
+
+/* ===========================================================================
+   LAYOUT
+   =========================================================================== */
+
+.section {
+  position: relative;
+  background: var(--bg);
+  color: var(--fg);
+  padding-block: clamp(var(--s-9), 9vw, var(--s-11));
+  isolation: isolate;
+  overflow: clip;
+}
+.section + .section { border-top: 1px solid var(--rule); }
+
+.wrap {
+  width: min(100% - var(--s-6) * 2, var(--wrap));
+  margin-inline: auto;
+}
+.wrap--narrow { width: min(100% - var(--s-6) * 2, var(--wrap-narrow)); }
+
+@media (min-width: 64rem) {
+  /* A barra lateral é `position: fixed` e ocupa 32px–64px da viewport: ela não
+     acompanha o wrap. O recuo só precisa existir enquanto a margem da página for
+     menor que ela — de 1440px para cima o wrap já está folgado e o recuo vira
+     puro desalinhamento. Antes era `padding-left` fixo, sem par à direita, e
+     jogava o conteúdo de TODAS as seções 72px para a direita. Agora é simétrico
+     e condicional: o conteúdo fica centrado e nunca encosta na barra. */
+  .wrap { padding-inline: max(0px, calc(var(--folga-barra) - max(var(--s-6), (100% - var(--wrap)) / 2))); }
+}
+
+.grid { display: grid; gap: var(--s-6); }
+.cols-2 { grid-template-columns: 1fr; }
+.cols-3 { grid-template-columns: 1fr; }
+.cols-4 { grid-template-columns: 1fr; }
+@media (min-width: 48rem) {
+  .cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .cols-3 { grid-template-columns: repeat(2, 1fr); }
+  .cols-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 68rem) {
+  .cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .cols-4 { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ===========================================================================
+   TIPOGRAFIA
+   =========================================================================== */
+
+.eyebrow {
+  display: flex; align-items: center; gap: var(--s-3);
+  font-size: var(--fs-xs);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  font-weight: 500;
+  margin-bottom: var(--s-5);
+}
+.eyebrow__num {
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 12, "wght" 500;
+  color: var(--tint-2);
+  font-size: var(--fs-sm);
+  letter-spacing: 0;
+}
+.eyebrow__rule {
+  flex: 1; height: 1px; background: var(--rule);
+  transform-origin: left;
+}
+
+h1, .h1 {
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 144, "wght" 380, "SOFT" 0, "WONK" 0;
+  font-size: var(--fs-display);
+  line-height: var(--lh-display);
+  letter-spacing: -.028em;
+  color: var(--fg-strong);
+  text-wrap: balance;
+}
+
+h2, .h2 {
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 96, "wght" 400, "SOFT" 0, "WONK" 0;
+  font-size: var(--fs-h2);
+  line-height: var(--lh-title);
+  letter-spacing: -.022em;
+  color: var(--fg-strong);
+  text-wrap: balance;
+  max-width: 22ch;
+}
+
+h3, .h3 {
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 36, "wght" 450;
+  font-size: var(--fs-h3);
+  line-height: 1.22;
+  letter-spacing: -.012em;
+  color: var(--fg-strong);
+}
+
+h4 {
+  font-family: var(--font-text);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: .02em;
+  color: var(--fg-strong);
+}
+
+.lead {
+  font-size: var(--fs-lead);
+  line-height: 1.5;
+  color: var(--fg);
+  max-width: 46ch;
+  font-weight: 300;
+}
+
+.prose { max-width: var(--measure); }
+.prose p + p { margin-top: var(--s-4); }
+.prose strong { color: var(--fg-strong); font-weight: 550; }
+
+.mono {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .02em;
+}
+
+/* ===========================================================================
+   BOTÕES — 6 estados
+   =========================================================================== */
+
+.btn {
+  --btn-bg: transparent;
+  --btn-fg: var(--fg-strong);
+  --btn-bd: var(--rule-ctl);
+  position: relative;
+  display: inline-flex; align-items: center; gap: var(--s-3);
+  padding: var(--s-3) var(--s-5);
+  min-height: 2.875rem;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border: 1px solid var(--btn-bd);
+  border-radius: var(--r);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  letter-spacing: .01em;
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    transform var(--t-1) var(--ease),
+    background-color var(--t-1) var(--ease),
+    border-color var(--t-1) var(--ease),
+    box-shadow var(--t-1) var(--ease),
+    color var(--t-1) var(--ease);
+}
+.btn__ico { width: 1rem; height: 1rem; flex: none; }
+.btn__ico--arrow { transition: transform var(--t-1) var(--ease); }
+
+/* repouso → hover */
+.btn:hover { transform: translateY(-1px); border-color: var(--tint); box-shadow: var(--lift); }
+.btn:hover .btn__ico--arrow { transform: translateX(3px); }
+/* foco */
+.btn:focus-visible { outline: 2px solid var(--tint); outline-offset: 3px; }
+/* ativo */
+.btn:active { transform: translateY(0); background: var(--bg-inset); }
+/* desabilitado */
+.btn[disabled], .btn[aria-disabled="true"] {
+  opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; border-color: var(--rule);
+}
+/* erro (usado no botão de envio quando o formulário falha) */
+.btn[data-state="error"] { border-color: var(--err); color: var(--err); }
+
+.btn--primary {
+  --btn-bg: var(--tint);
+  --btn-fg: var(--bg);
+  --btn-bd: var(--tint);
+  font-weight: 600;
+}
+[data-surface="light"] .btn--primary,
+[data-surface="light-2"] .btn--primary { --btn-fg: var(--bone-100); }
+.btn--primary:hover { --btn-bg: color-mix(in oklab, var(--tint) 88%, var(--fg-strong)); }
+
+.btn--ghost { --btn-bd: transparent; padding-inline: var(--s-2); }
+.btn--ghost:hover { --btn-bd: var(--rule-ctl); }
+
+/* varredura de luz no botão primário — só em hover */
+.btn--primary::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(100deg, transparent 30%, rgb(255 255 255 / .3) 50%, transparent 70%);
+  transform: translateX(-120%);
+}
+.btn--primary:hover::after { animation: sheen var(--t-3) var(--ease) both; }
+
+
+/* ===========================================================================
+   CONVITE DE FIM DE SEÇÃO (dispositivo de coesão nº 3)
+   =========================================================================== */
+
+.invite {
+  margin-top: var(--s-8);
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--rule);
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-5);
+  justify-content: space-between;
+}
+.invite__text {
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 24, "wght" 350;
+  font-size: var(--fs-h3);
+  color: var(--fg-strong);
+  max-width: 34ch;
+  line-height: 1.24;
+}
+
+/* ===========================================================================
+   CARTÕES
+   =========================================================================== */
+
+.card {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  padding: var(--pad-cartao);
+  transition: transform var(--t-1) var(--ease), border-color var(--t-1) var(--ease), box-shadow var(--t-1) var(--ease);
+}
+.card__num {
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 14, "wght" 500;
+  font-size: var(--fs-sm);
+  color: var(--tint-2);
+  letter-spacing: .06em;
+  display: block;
+  margin-bottom: var(--s-3);
+}
+.card h3 { margin-bottom: var(--s-3); }
+.card p { color: var(--fg); font-size: var(--fs-sm); line-height: 1.58; }
+
+/* ===========================================================================
+   DETAILS / ACORDEÃO — 6 estados
+   =========================================================================== */
+
+.disc {
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  background: var(--bg-card);
+  transition: border-color var(--t-1) var(--ease), background-color var(--t-1) var(--ease);
+}
+.disc + .disc { margin-top: var(--s-3); }
+.disc:hover { border-color: var(--rule-ctl); }
+.disc[open] { border-color: var(--tint); background: var(--bg-raised); }
+
+.disc > summary {
+  display: flex; align-items: flex-start; gap: var(--s-4);
+  padding: var(--s-5);
+  cursor: pointer;
+  list-style: none;
+  color: var(--fg-strong);
+  font-weight: 450;
+  font-size: var(--fs-body);
+  min-height: 3rem;
+}
+.disc > summary::-webkit-details-marker { display: none; }
+.disc > summary:focus-visible { outline: 2px solid var(--tint); outline-offset: -2px; border-radius: var(--r); }
+.disc > summary:active { background: var(--bg-inset); }
+
+.disc__sign {
+  flex: none; width: 1.125rem; height: 1.125rem; margin-top: .28rem;
+  position: relative;
+}
+.disc__sign::before, .disc__sign::after {
+  content: ""; position: absolute; inset: 50% 0 auto 0;
+  height: 1px; background: var(--tint);
+  transition: transform var(--t-2) var(--ease), opacity var(--t-2) var(--ease);
+}
+.disc__sign::after { transform: rotate(90deg); }
+.disc[open] .disc__sign::after { transform: rotate(0deg); opacity: 0; }
+
+.disc__body {
+  padding: 0 var(--s-5) var(--s-5) calc(var(--s-5) + 1.125rem + var(--s-4));
+  color: var(--fg);
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+}
+.disc__body p + p { margin-top: var(--s-3); }
+.disc[open] .disc__body { animation: rise var(--t-2) var(--ease) backwards; }
+
+/* ===========================================================================
+   FORMULÁRIO — 6 estados
+   =========================================================================== */
+
+.field { display: grid; gap: var(--s-2); }
+.field__label {
+  font-size: var(--fs-xs);
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--fg-muted); font-weight: 500;
+}
+.field__req { color: var(--tint); }
+
+.input, .textarea, .select {
+  width: 100%;
+  background: var(--bg-raised);
+  border: 1px solid var(--rule-ctl);
+  border-radius: var(--r);
+  padding: var(--s-3) var(--s-4);
+  min-height: 2.875rem;
+  color: var(--fg-strong);
+  transition: border-color var(--t-1) var(--ease), background-color var(--t-1) var(--ease), box-shadow var(--t-1) var(--ease);
+}
+.textarea { min-height: 7rem; resize: vertical; line-height: 1.55; }
+.input::placeholder, .textarea::placeholder { color: var(--fg-muted); opacity: .75; }
+
+.input:hover, .textarea:hover, .select:hover { border-color: var(--tint); }
+.input:focus-visible, .textarea:focus-visible, .select:focus-visible {
+  outline: 2px solid var(--tint); outline-offset: 2px; border-color: var(--tint);
+}
+.input:active, .textarea:active { background: var(--bg-inset); }
+.input[disabled], .textarea[disabled], .select[disabled] {
+  opacity: .45; cursor: not-allowed; border-color: var(--rule);
+}
+.input[aria-invalid="true"], .textarea[aria-invalid="true"], .select[aria-invalid="true"] {
+  border-color: var(--err);
+}
+
+.field__error {
+  display: none;
+  align-items: center; gap: var(--s-2);
+  color: var(--err); font-size: var(--fs-xs); font-weight: 500;
+}
+.field__error svg { width: .875rem; height: .875rem; flex: none; }
+.field[data-invalid="true"] .field__error { display: flex; }
+
+/* ===========================================================================
+   CHIPS / TAGS — mesma postura geométrica, sem pílula
+   =========================================================================== */
+
+.chip {
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  padding: var(--s-1) var(--s-3);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  font-size: var(--fs-xs);
+  letter-spacing: .06em;
+  color: var(--fg-muted);
+  background: transparent;   /* fundo sólido/transparente: o contraste do rótulo
+                                é medido contra a superfície real da seção, e não
+                                contra uma composição alfa impossível de auditar */
+}
+.chip--tint { color: var(--tint); border-color: color-mix(in oklab, var(--tint) 45%, transparent); }
+.chip__dot { width: .375rem; height: .375rem; border-radius: 50%; background: currentColor; flex: none; }
+
+/* ===========================================================================
+   TABELA
+   =========================================================================== */
+
+.table-scroll { overflow-x: auto; border: 1px solid var(--rule); border-radius: var(--r); }
+table { width: 100%; border-collapse: collapse; font-size: var(--fs-sm); min-width: 34rem; }
+caption { text-align: left; padding: var(--s-4) var(--s-5); color: var(--fg-muted); font-size: var(--fs-xs); letter-spacing: .1em; text-transform: uppercase; }
+th, td { text-align: left; padding: var(--s-4) var(--s-5); border-top: 1px solid var(--rule); vertical-align: top; }
+th { color: var(--fg-strong); font-weight: 550; font-size: var(--fs-xs); letter-spacing: .1em; text-transform: uppercase; }
+tbody tr:nth-child(even) { background: color-mix(in oklab, var(--bg-inset) 55%, transparent); }
+
+/* ===========================================================================
+   ESPINHA — dispositivo de coesão nº 1
+   =========================================================================== */
+
+.spine {
+  position: fixed;
+  left: var(--s-6); top: 0; bottom: 0;
+  width: var(--s-6);
+  display: none;
+  z-index: 40;
+  pointer-events: none;
+}
+@media (min-width: 64rem) { .spine { display: block; } }
+
+.spine__track {
+  position: absolute; left: 50%; top: 0; bottom: 0;
+  width: 1px; margin-left: -.5px;
+  background: color-mix(in oklab, var(--line-ctl-dark) 45%, transparent);
+}
+.spine__progress {
+  position: absolute; left: 50%; top: 0;
+  width: 1px; margin-left: -.5px; height: 100%;
+  background: linear-gradient(180deg, var(--accent), var(--brass));
+  transform-origin: top;
+  transform: scaleY(0);
+}
+.spine__nodes {
+  position: absolute; left: 0; right: 0;
+  top: 50%; transform: translateY(-50%);
+  display: grid; gap: var(--s-3);
+  pointer-events: auto;
+}
+.spine__node {
+  position: relative;
+  display: grid; place-items: center;
+  width: var(--s-6); height: 1.25rem;
+  background: none; border: 0; padding: 0; cursor: pointer;
+}
+.spine__node::before {
+  content: ""; width: 5px; height: 5px;
+  background: var(--line-ctl-dark);
+  transform: rotate(45deg);
+  transition: transform var(--t-2) var(--ease), background-color var(--t-2) var(--ease);
+}
+.spine__node:hover::before { background: var(--accent); transform: rotate(45deg) scale(1.5); }
+.spine__node:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-radius: var(--r); }
+.spine__node:active::before { transform: rotate(45deg) scale(1.1); }
+.spine__node[aria-current="true"]::before { background: var(--accent); transform: rotate(45deg) scale(1.9); }
+.spine__node[aria-current="true"]::after {
+  content: ""; position: absolute; inset: 0;
+  border: 1px solid color-mix(in oklab, var(--accent) 50%, transparent);
+  border-radius: 50%;
+}
+.spine__label {
+  position: absolute; left: calc(100% + var(--s-3)); top: 50%;
+  transform: translate(-4px, -50%);
+  white-space: nowrap;
+  font-size: var(--fs-xs); letter-spacing: .1em; text-transform: uppercase;
+  color: var(--text-strong);
+  background: color-mix(in oklab, var(--ink-900) 88%, transparent);
+  border: 1px solid var(--line-dark);
+  border-radius: var(--r);
+  padding: var(--s-1) var(--s-3);
+  opacity: 0; pointer-events: none;
+  transition: opacity var(--t-1) var(--ease), transform var(--t-1) var(--ease);
+}
+.spine__node:hover .spine__label,
+.spine__node:focus-visible .spine__label { opacity: 1; transform: translate(0, -50%); }
+
+/* ===========================================================================
+   CABEÇALHO
+   =========================================================================== */
+
+.head {
+  position: fixed; inset: 0 0 auto 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--s-4);
+  padding: var(--s-4) var(--s-6);
+  background: color-mix(in oklab, var(--ink-900) 78%, transparent);
+  border-bottom: 1px solid transparent;
+  transition: background-color var(--t-2) var(--ease), border-color var(--t-2) var(--ease);
+}
+@supports (backdrop-filter: blur(1px)) {
+  .head { backdrop-filter: blur(14px) saturate(140%); }
+}
+.head[data-scrolled="true"] {
+  background: color-mix(in oklab, var(--ink-900) 92%, transparent);
+  border-bottom-color: var(--line-dark);
+}
+
+.brand { display: flex; align-items: center; gap: var(--s-3); text-decoration: none; color: var(--text-strong); }
+.brand__mark { width: 1.75rem; height: 1.75rem; flex: none; }
+.brand__name {
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 18, "wght" 500;
+  font-size: 1.0625rem; letter-spacing: .02em; line-height: 1;
+}
+.brand__sub {
+  display: block; font-family: var(--font-text);
+  /* era .625rem = 10px, único texto do site abaixo de 11px */
+  font-size: .6875rem; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--text-muted); margin-top: .18rem;
+}
+.brand:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: var(--r); }
+
+/* 9 itens só cabem numa linha a partir de 1200px. Abaixo disso o menu compacto
+   assume — dois itens quebrando em duas linhas desalinham a barra inteira. */
+.nav { display: none; gap: var(--s-1); align-items: center; }
+@media (min-width: 75rem) { .nav { display: flex; } }
+.nav a {
+  white-space: nowrap;
+  padding: var(--s-2) var(--s-3);
+  font-size: var(--fs-sm); text-decoration: none;
+  color: var(--text-muted); border-radius: var(--r);
+  border: 1px solid transparent;
+  transition: color var(--t-1) var(--ease), border-color var(--t-1) var(--ease);
+}
+.nav a:hover { color: var(--text-strong); border-color: var(--line-dark); }
+.nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.nav a:active { color: var(--accent); }
+.nav a[aria-current="true"] { color: var(--accent); border-color: color-mix(in oklab, var(--accent) 40%, transparent); }
+
+.head__cta { display: none; }
+@media (min-width: 48rem) { .head__cta { display: inline-flex; } }
+
+/* menu compacto */
+.menu-toggle { display: inline-flex; }
+@media (min-width: 75rem) { .menu-toggle { display: none; } }
+
+/* O UA aplica display:none a dialog:not([open]). A regra .sheet abaixo declara
+   display:grid e sobrescreveria isso, deixando o menu permanentemente por cima
+   da página. Esta linha restaura o comportamento e precisa vir antes. */
+dialog.sheet:not([open]) { display: none; }
+
+.sheet {
+  position: fixed; inset: 0; z-index: 60;
+  background: color-mix(in oklab, var(--ink-900) 96%, transparent);
+  padding: var(--s-10) var(--s-6) var(--s-6);
+  display: grid; align-content: start; gap: var(--s-2);
+  border: 0;
+  width: 100%; max-width: none; height: 100%; max-height: none;
+}
+.sheet::backdrop { background: color-mix(in oklab, var(--ink-900) 70%, transparent); }
+.sheet a {
+  display: flex; align-items: baseline; gap: var(--s-4);
+  padding: var(--s-4) 0;
+  border-bottom: 1px solid var(--line-dark);
+  text-decoration: none; color: var(--text-strong);
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 24, "wght" 380;
+  font-size: 1.35rem;
+}
+.sheet a span { font-family: var(--font-text); font-size: var(--fs-xs); color: var(--brass); letter-spacing: .1em; }
+.sheet a:hover { color: var(--accent); }
+.sheet a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.sheet__close { position: absolute; top: var(--s-4); right: var(--s-6); }
+
+/* ===========================================================================
+   RODAPÉ
+   =========================================================================== */
+
+.foot { background: var(--ink-900); color: var(--text-body); border-top: 1px solid var(--line-dark); }
+.foot__grid { display: grid; gap: var(--s-8); padding-block: var(--s-9) var(--s-7); }
+@media (min-width: 56rem) { .foot__grid { grid-template-columns: 1.4fr 1fr 1fr; } }
+.foot h4 { color: var(--text-muted); font-size: var(--fs-xs); letter-spacing: .16em; text-transform: uppercase; margin-bottom: var(--s-4); }
+.foot li { display: flex; }
+/* alvo de toque: sem o padding os links do rodapé ficam com 22px de altura,
+   abaixo do mínimo de 24px do WCAG 2.5.8 */
+.foot li a { padding-block: var(--s-2); min-height: 2.375rem; display: flex; align-items: center; }
+.foot a { text-decoration: none; color: var(--text-body); border-bottom: 1px solid transparent; transition: color var(--t-1) var(--ease), border-color var(--t-1) var(--ease); }
+.foot a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.foot a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+.legal {
+  border-top: 1px solid var(--line-dark);
+  padding-block: var(--s-6) var(--s-8);
+  display: grid; gap: var(--s-4);
+  font-size: var(--fs-xs); color: var(--text-muted); line-height: 1.7;
+}
+.legal strong { color: var(--text-body); font-weight: 500; }
+.demo-note {
+  border: 1px solid color-mix(in oklab, var(--brass) 34%, transparent);
+  border-left-width: 2px;
+  border-radius: var(--r);
+  padding: var(--s-4) var(--s-5);
+  color: var(--text-body);
+  background: color-mix(in oklab, var(--brass) 6%, transparent);
+}
+
+/* ===========================================================================
+   UTILITÁRIOS
+   =========================================================================== */
+
+.vh {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+.stack { display: grid; gap: var(--s-5); }
+.stack--tight { gap: var(--s-3); }
+.stack--loose { gap: var(--s-7); }
+.flow > * + * { margin-top: var(--s-4); }
+.center { text-align: center; }
+/* duas colunas só quando há largura para elas. Em 390px o valor ficava com
+   184px e "Rua Modelo, 000 — Batel, Curitiba/PR" quebrava em três linhas contra
+   um rótulo de uma linha; empilhado, o valor usa a largura inteira. */
+.dl-inline { display: grid; gap: var(--s-2) var(--s-5); font-size: var(--fs-sm); }
+@media (min-width: 30rem) { .dl-inline { grid-template-columns: auto 1fr; } }
+@media (max-width: 29.99rem) { .dl-inline dt { margin-top: var(--s-3); } .dl-inline dt:first-of-type { margin-top: 0; } }
+.dl-inline dt { color: var(--fg-muted); }
+.dl-inline dd { margin: 0; color: var(--fg-strong); }
