@@ -23,3 +23,6 @@ img/_f*.jpg
 
 # estado interno do Claude Code — não faz parte da entrega
 .claude/
+
+.vercel
+.env*

@@ -27,6 +27,25 @@ python -m http.server 8778 --directory "c:\Users\Aymar\Downloads\dentistas\site-
 
 Depois: **http://127.0.0.1:8777/** (v1) e **http://127.0.0.1:8778/** (v2)
 
+### As duas já estão publicadas
+
+| | URL | Projeto na Vercel |
+|---|---|---|
+| **v1** | https://vertice-odontologia-ochre.vercel.app | `vertice-odontologia` |
+| **v2** | https://clinica-aroeira.vercel.app | `clinica-aroeira` |
+
+Os dois projetos vivem no time `sites-adc1` e apontam para o mesmo repositório,
+`markdevempresa-dotcom/SITES`. **A v1 tem deploy automático a cada `git push`** —
+ela foi vinculada ao GitHub. A v2 foi enviada direto pelo CLI; para republicar:
+
+```bash
+cd site-clinico-geral && vercel deploy --prod --yes
+```
+
+**As duas estão com indexação bloqueada em três camadas** — `noindex` na metatag,
+`Disallow: /` no `robots.txt` e `X-Robots-Tag` no header, este último vindo do
+`vercel.json` de cada pasta. Ver §3b e §3c para quando e como reverter.
+
 Sem servidor a página ainda **aparece inteira e legível** — o site é construído em progressive enhancement.
 O que se perde é a revelação por rolagem, o stepper, o tour e o formulário.
 
