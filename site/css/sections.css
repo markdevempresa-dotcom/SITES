@@ -1062,10 +1062,20 @@
 @media (min-width: 68rem) { .procs { grid-template-columns: repeat(4, 1fr); } }
 
 .proc {
-  display: grid; gap: var(--s-3); align-content: start;
+  /* Linhas fixas com o parágrafo flexível: a ficha encosta no fundo do cartão,
+     em vez de flutuar conforme o comprimento do texto. O `align-content: start`
+     que havia aqui empacotava todas as linhas no topo e anulava o `1fr` — por
+     isso ele saiu. São cinco filhos: foto, marca, título, parágrafo, ficha. */
+  display: grid; gap: var(--s-3);
+  grid-template-rows: auto auto auto 1fr auto;
+  /* o cartao vira contexto de consulta: a ficha abaixo reage a largura DELE,
+     nao a do viewport — o mesmo cartao fica estreito em 4 colunas no desktop
+     e em 2 colunas no celular, e os dois casos querem o mesmo tratamento */
+  container-type: inline-size;
   background: var(--bg-card);
   border: 1px solid var(--rule); border-radius: var(--r);
-  padding: var(--pad-cartao);
+  --pad-proc: var(--pad-cartao);
+  padding: var(--pad-proc);
   box-shadow: var(--sombra-1);
   transition: transform var(--t-2) var(--ease), border-color var(--t-2) var(--ease),
               box-shadow var(--t-2) var(--ease), opacity var(--t-2) var(--ease),
@@ -1079,6 +1089,10 @@
   color: var(--teal);
 }
 .proc__mark svg { width: 1.35rem; height: 1.35rem; }
+/* coluna estreita: sem isto, palavra longa ("Restauração", "acompanhamento")
+   estoura a caixa e o overflow:hidden do cartão a corta. O <html> declara
+   lang="pt-BR", então a hifenização usa o dicionário certo. */
+.proc h3, .proc p, .proc__meta dd { overflow-wrap: break-word; hyphens: auto; }
 .proc h3 { font-size: var(--fs-h3); line-height: 1.18; }
 .proc p { font-size: var(--fs-sm); color: var(--fg); line-height: 1.58; }
 .proc__meta {
@@ -1089,6 +1103,19 @@
 .proc__meta > div { display: flex; justify-content: space-between; gap: var(--s-3); }
 .proc__meta dt { font-size: var(--fs-xs); letter-spacing: .1em; text-transform: uppercase; color: var(--fg-muted); }
 .proc__meta dd { margin: 0; font-size: var(--fs-sm); color: var(--fg-strong); text-align: right; }
+
+/* Abaixo de 208px de LARGURA INTERNA do cartão, "ENTRA EM" e "Consulta agendada" não cabem lado a
+   lado e o rótulo quebra em duas linhas. Ali eles empilham. Vale para as 4
+   colunas do desktop em ~1100px e para as 2 do celular — quem manda é a largura
+   do CARTÃO, não a do viewport. Atenção: `container-type: inline-size` mede a
+   CAIXA DE CONTEÚDO — em 1440px o cartão tem 290px mas só 224px por dentro.
+   Precisa vir DEPOIS da regra acima: container query não soma especificidade,
+   e antes dela o `text-align: right` vencia e os valores curtos ficavam
+   empurrados para a direita, fora da coluna do rótulo. */
+@container (max-width: 13rem) {
+  .proc__meta > div { display: grid; gap: 0; }
+  .proc__meta dd { text-align: left; }
+}
 
 /* fora do filtro: apaga sem tirar do fluxo */
 .proc[data-fora="true"] { opacity: .3; filter: saturate(.25); }
@@ -1171,7 +1198,7 @@
 .proc { padding-top: 0; overflow: hidden; }
 .proc__foto {
   display: block; position: relative;
-  margin: 0 calc(var(--pad-cartao) * -1) 0;
+  margin: 0 calc(var(--pad-proc) * -1) 0;
   aspect-ratio: 16 / 10; overflow: hidden;
   background: var(--menta);
 }
@@ -1196,4 +1223,39 @@
 }
 @media (hover: hover) {
   .proc:hover .proc__foto img { transform: scale(1.05); filter: var(--grade-foto-hover); }
+}
+
+/* ---------------------------------------------------------------------------
+   CELULAR — DOIS cartões de procedimento por linha
+   Um embaixo do outro, oito cartões viravam uma coluna de ~4.000px. Em duas
+   colunas a seção cai pela metade e a grade volta a ser lida como grade.
+
+   O preço é largura: em 390px sobram ~157px por cartão. Só reduzir a coluna
+   deixaria o texto ilegível, então TUDO encolhe junto — recuo, marca, título,
+   corpo e a ficha. E a ficha deixa de ser rótulo-e-valor na mesma linha:
+   "ENTRA EM" + "Consulta agendada" não cabem lado a lado em 125px, então
+   empilham.
+   --------------------------------------------------------------------------- */
+@media (max-width: 39.99rem) {
+  .procs { grid-template-columns: repeat(2, 1fr); gap: var(--s-4) var(--s-3); }
+
+  /* uma variável só: a foto usa margem negativa do mesmo valor */
+  .proc { --pad-proc: var(--s-4); gap: var(--s-2); }
+
+  .proc__mark { width: 2rem; height: 2rem; margin-top: -1.1rem; }
+  .proc__mark svg { width: 1rem; height: 1rem; }
+
+  .proc h3 { font-size: 1rem; line-height: 1.2; }
+  .proc p  { font-size: var(--fs-xs); line-height: 1.5; }
+
+  /* o empilhamento vem da container query la de cima; aqui so o tamanho */
+  .proc__meta { gap: var(--s-2); margin-top: var(--s-1); padding-top: var(--s-2); }
+  .proc__meta dt { font-size: .625rem; letter-spacing: .08em; }
+  .proc__meta dd { font-size: var(--fs-xs); }
+}
+
+/* Em telas muito estreitas (abaixo de 340px) duas colunas dariam ~130px por
+   cartão e o título quebraria em quatro linhas. Ali volta para uma coluna. */
+@media (max-width: 21.25rem) {
+  .procs { grid-template-columns: 1fr; }
 }
